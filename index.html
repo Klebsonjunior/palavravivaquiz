@@ -160,6 +160,12 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
 /* RESULT CTA btn */
 .btn-result { display: inline-block; background: var(--cal); color: #FAF8F3; font-size: 17px; font-weight: 700; padding: 20px 48px; border: none; text-decoration: none; cursor: pointer; transition: background .15s; }
 .btn-result:hover { background: #142440; }
+.bridge-item { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--ink-mid); line-height:1.5; }
+.bridge-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:7px; }
+.bridge-dot-cal { background:var(--cal); }
+.bridge-dot-arm { background:var(--arm); }
+.bridge-dot-gold { background:var(--gold-line); }
+@media(max-width:480px){ .offer-grid-intro { grid-template-columns:1fr !important; } }
 </style>
 </head>
 <body>
@@ -204,8 +210,15 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
         </div>
         <div class="result-pcts" id="result-pcts"></div>
         <p class="result-hook" id="result-hook"></p>
-        <p class="result-cta-hint">Entenda o debate por completo</p>
+
+        <!-- PONTE RESULTADO → PRODUTO -->
+        <div id="result-bridge" style="background:var(--parch);border:1px solid var(--border);border-left:3px solid var(--gold-line);padding:22px 24px;text-align:left;margin-bottom:28px;">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-mid);margin-bottom:14px;">O que você vai aprender com este material</p>
+          <div id="result-bridge-items" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+
         <a href="#oferta" class="btn-result" id="result-cta">Ver o material completo</a>
+        <p style="font-size:12px;color:var(--ink-light);margin-top:10px;">A partir de R$9,90 · Acesso imediato · Garantia de 7 dias</p>
       </div>
     </div>
 
@@ -300,6 +313,34 @@ body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--
 
     <div class="value-bar">
       Um livro introdutório sobre o mesmo tema custa entre R$40 e R$80, tem 200 páginas e você provavelmente não vai terminar. Aqui você entende tudo em uma tarde, por <strong>R$9,90</strong>.
+    </div>
+
+    <!-- O QUE É ESTE MATERIAL -->
+    <div style="max-width:600px;margin:0 auto 40px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-mid);text-align:center;margin-bottom:24px;">O que é este material</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+        <div style="background:var(--parch);border:1px solid var(--border);padding:20px 18px;">
+          <p style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">📄 Formato visual, não livro</p>
+          <p style="font-size:13px;color:var(--ink-light);line-height:1.55;">3 infográficos em PDF. Cada um cabe em uma página. Você lê em uma tarde, não em semanas.</p>
+        </div>
+
+        <div style="background:var(--parch);border:1px solid var(--border);padding:20px 18px;">
+          <p style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">⚖️ Os dois lados, sem parcialidade</p>
+          <p style="font-size:13px;color:var(--ink-light);line-height:1.55;">Calvinismo e Arminianismo apresentados com o mesmo rigor. Não é apologética. É estudo.</p>
+        </div>
+
+        <div style="background:var(--parch);border:1px solid var(--border);padding:20px 18px;">
+          <p style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">🗺️ Contexto histórico incluído</p>
+          <p style="font-size:13px;color:var(--ink-light);line-height:1.55;">De Calvino e Arminius ao Sínodo de Dort. Você entende de onde vêm as ideias, não só o que elas dizem.</p>
+        </div>
+
+        <div style="background:var(--parch);border:1px solid var(--border);padding:20px 18px;">
+          <p style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">📲 Funciona no celular</p>
+          <p style="font-size:13px;color:var(--ink-light);line-height:1.55;">Acesso por e-mail. Abre no celular, tablet ou computador. Sem instalar nada. Acesso permanente.</p>
+        </div>
+
+      </div>
     </div>
 
     <div class="offer-grid">
@@ -484,6 +525,31 @@ function showResult() {
   if (typeof fbq !== 'undefined') {
     fbq('track', 'Lead', { content_name: label });
   }
+
+  // Bridge items personalizados
+  var bridgeItems = [];
+  if (calPct >= 60) {
+    bridgeItems = [
+      {dot:'cal', text:'Por que você pensa como Calvinista em eleição, graça e perseverança — e como defender isso com precisão.'},
+      {dot:'arm', text:'O que o Arminianismo realmente defende (não a caricatura) — para entender o outro lado sem distorção.'},
+      {dot:'gold', text:'O contexto histórico que explica por que boa parte das igrejas brasileiras discorda de você em pelo menos 3 pontos.'}
+    ];
+  } else if (calPct <= 40) {
+    bridgeItems = [
+      {dot:'arm', text:'De onde vêm as crenças Arminianas que você já tem — e qual é a base bíblica e histórica por trás delas.'},
+      {dot:'cal', text:'O que o Calvinismo defende de fato — não o que você ouviu em pregação contrária, mas os 5 pontos reais.'},
+      {dot:'gold', text:'Como esses dois sistemas se formaram e por que o debate importa até hoje nas igrejas brasileiras.'}
+    ];
+  } else {
+    bridgeItems = [
+      {dot:'gold', text:'Os 5 pontos do Calvinismo (TULIP) e os 5 do Arminianismo (FACTS) frente a frente, em uma página.'},
+      {dot:'cal', text:'Onde cada sistema concorda e onde diverge — eleição, expiação, graça, livre-arbítrio e perseverança.'},
+      {dot:'arm', text:'O contexto histórico completo: quem eram Calvino e Arminius e por que o debate chegou até o Brasil de hoje.'}
+    ];
+  }
+  document.getElementById('result-bridge-items').innerHTML = bridgeItems.map(function(b){
+    return '<div class="bridge-item"><span class="bridge-dot bridge-dot-' + b.dot + '"></span><span>' + b.text + '</span></div>';
+  }).join('');
 
   // Scroll suave para o resultado
   setTimeout(function() {
